@@ -57,11 +57,11 @@ mcp_table$sig <- ""
 
 add_stars <- function(x){
   if (x <= .001) {
-    sig = "***"
+    sig = "\\***"
   } else if (x <= .01) {
-    sig = "**"
+    sig = "\\**"
   } else if (x <= .05) {
-    sig = "*"
+    sig = "\\*"
   } else {
     sig =""
   }
