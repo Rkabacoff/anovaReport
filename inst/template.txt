@@ -1,0 +1,164 @@
+## One-way ANOVA
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+library(ggplot2)
+library(ggridges)
+library(formattable)
+library(knitr)
+```
+
+
+```{r calculate tables and statistics}
+
+xxxDATA$xxxIV <- factor(xxxDATA$xxxIV)
+fit.lm <- lm(xxxDV ~ xxxIV, xxxDATA)
+summary.lm <- summary(fit.lm)
+dv <- summary.lm$call$formula[[2]]
+iv <- summary.lm$call$formula[[3]]
+
+F <- summary.lm$fstatistic[[1]]
+dfn <- summary.lm$fstatistic[[2]]
+dfd <- summary.lm$fstatistic[[3]]
+p <- pf(F, dfn, dfd,lower.tail=FALSE)
+p.formated <-  format.pval(p)
+r2 <- summary.lm$r.squared
+anova_table<- anova(fit.lm)
+
+if (p < .001) {
+  p_reported = "p < .001"
+} else if (p < .01) {
+  p_reported = "p < .01"
+} else if (p < .05) {
+  p_reported = "p < .05"
+} else {
+  p_reported = "p > .05"
+}
+
+stats <- function(x) c(n=length(x),
+                       mean=mean(x, na.rm=TRUE),
+                       sd=sd(x, na.rm=TRUE),
+                       min=min(x, na.rm=TRUE),
+                       max=max(x, na.rm=TRUE))
+sum_stats <- aggregate(xxxDATA$xxxDV, by=list(xxxDATA$xxxIV), FUN=stats)
+sum_stats <- data.frame(group=sum_stats$Group.1,
+                        n    = sum_stats$x[, 1],
+                        mean = sum_stats$x[, 2],
+                        sd   = sum_stats$x[, 3],
+                        min  = sum_stats$x[, 4],
+                        max  = sum_stats$x[, 5])
+sum_stats$mean <- round(sum_stats$mean, 2)
+sum_stats$sd  <- round(sum_stats$sd, 2)
+
+mcp <- TukeyHSD(aov(fit.lm))
+mcp_table <- round(as.data.frame(mcp$xxxIV), 3)
+names(mcp_table)[4] <- "p"
+mcp_table$sig <- ""
+
+add_stars <- function(x){
+  if (x <= .001) {
+    sig = "***"
+  } else if (x <= .01) {
+    sig = "**"
+  } else if (x <= .05) {
+    sig = "*"
+  } else {
+    sig =""
+  }
+  return(sig)
+}
+
+add_stars <- Vectorize(add_stars)
+mcp_table$sig <- add_stars(mcp_table$p)
+
+```
+
+Group comparisons were completed with a one-way analysis of variance.
+
+F(`r dfn`, `r dfd` ) = `r round(F, 2)`, `r p_reported`.
+
+</br>
+
+### Summary Statistics
+
+  Groups with average outcomes above the median are colored red.
+
+```{r, summary statistics}
+formattable(sum_stats,
+            align = c("l", rep("r", NCOL(sum_stats) - 1)),
+            list(mean = formatter("span", style = function(x) ifelse(x > median(x), "color:red", NA))))
+```
+
+
+</br>
+
+
+### ANOVA Table
+
+  ```{r, anova table}
+formattable(anova_table)
+
+```
+
+
+</br>
+
+
+### Post-hoc Comparisons
+
+Comparisons of groups 2 at a time. Probabilities are adjusted for multiple comparisons using the Tukey Honestly Significant Difference method.
+
+
+```{r, posthoc}
+unit.scale = function(x) {
+  x <- abs(x)
+  (x - min(x)) / (max(x) - min(x))
+}
+formattable(mcp_table,
+            list(diff = color_bar("skyblue", fun = unit.scale)))
+
+
+```
+
+</br>
+
+
+### Graphs
+
+  </br>
+
+#### Box Plots
+
+Boxes capture the middle 50 percent of scores. Horizontal lines within the boxes are medians. The wiskers capture roughly 99% of scores and the points display outliers.
+
+</br>
+
+
+```{r boxplots}
+ggplot(xxxDATA,
+       aes(y = xxxDV,
+           x = xxxIV,
+           fill = xxxIV)) +
+  geom_boxplot() +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+</br>
+
+#### Ridge Plots
+
+Ridge plots use kernel density estimation to display the distribution of scores in each group.
+
+</br>
+
+
+```{r ridge plots}
+ggplot(xxxDATA,
+       aes(x = xxxDV,
+           y = xxxIV,
+           fill = xxxIV)) +
+  geom_density_ridges() +
+  theme_ridges() +
+  theme(legend.position = "none")
+```
