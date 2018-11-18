@@ -6,6 +6,7 @@
 #' @param data frame
 #' @param x grouping variable
 #' @param y dependent variable
+#' @param browse If \code{TRUE}, use external browser
 #' @import ggplot2
 #' @import ggridges
 #' @import formattable
@@ -14,10 +15,10 @@
 #' @examples
 #' data(mpg, package="ggplot2")
 #' anova_report(mpg, class, cty)
-#' anova_report(mpg, class, cty, browse=FALSE)
+#' anova_report(mpg, class, cty, browse=TRUE)
 #' anova_report(mtcars, cyl, mpg)
 
-anova_report <- function(data, x, y, browse=TRUE){
+anova_report <- function(data, x, y, browse=FALSE){
   data <- deparse(substitute(data))
   x <- deparse(substitute(x))
   y <- deparse(substitute(y))

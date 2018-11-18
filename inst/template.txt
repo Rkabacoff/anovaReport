@@ -95,7 +95,7 @@ formattable(sum_stats,
 
 ### ANOVA Table
 
-  ```{r, anova table}
+```{r, anova table}
 formattable(anova_table)
 
 ```

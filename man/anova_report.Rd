@@ -4,7 +4,7 @@
 \alias{anova_report}
 \title{Anova Report}
 \usage{
-anova_report(data, x, y, browse = TRUE)
+anova_report(data, x, y, browse = FALSE)
 }
 \arguments{
 \item{data}{frame}
@@ -12,6 +12,8 @@ anova_report(data, x, y, browse = TRUE)
 \item{x}{grouping variable}
 
 \item{y}{dependent variable}
+
+\item{browse}{If \code{TRUE}, use external browser}
 }
 \description{
 Example of generating an HTML report from R function
@@ -23,6 +25,6 @@ The grouping variable is coerced to be a factor.
 \examples{
 data(mpg, package="ggplot2")
 anova_report(mpg, class, cty)
-anova_report(mpg, class, cty, browse=FALSE)
+anova_report(mpg, class, cty, browse=TRUE)
 anova_report(mtcars, cyl, mpg)
 }
