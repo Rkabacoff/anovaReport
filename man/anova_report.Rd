@@ -15,6 +15,9 @@ anova_report(data, x, y, browse = FALSE)
 
 \item{browse}{If \code{TRUE}, use external browser}
 }
+\value{
+path to HTML file
+}
 \description{
 Example of generating an HTML report from R function
 }
@@ -23,8 +26,8 @@ Example of generating an HTML report from R function
 The grouping variable is coerced to be a factor.
 }
 \examples{
+# from ggplot2
 data(mpg, package="ggplot2")
 anova_report(mpg, class, cty)
 anova_report(mpg, class, cty, browse=TRUE)
-anova_report(mtcars, cyl, mpg)
 }

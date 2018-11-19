@@ -14,11 +14,13 @@
 #' @import ggpubr
 #' @import car
 #' @export
+#' @return path to HTML file
 #' @examples
+#' # from ggplot2
 #' data(mpg, package="ggplot2")
 #' anova_report(mpg, class, cty)
 #' anova_report(mpg, class, cty, browse=TRUE)
-#' anova_report(mtcars, cyl, mpg)
+
 
 anova_report <- function(data, x, y, browse=FALSE){
   data <- deparse(substitute(data))
@@ -43,5 +45,5 @@ anova_report <- function(data, x, y, browse=FALSE){
      viewer <- getOption("viewer")
      viewer(to)
   }
-
+  invisible(to)
 }
