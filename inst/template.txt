@@ -6,6 +6,7 @@ library(ggplot2)
 library(ggridges)
 library(formattable)
 library(knitr)
+
 ```
 
 
@@ -24,6 +25,13 @@ p <- pf(F, dfn, dfd,lower.tail=FALSE)
 p.formated <-  format.pval(p)
 r2 <- summary.lm$r.squared
 anova_table<- anova(fit.lm)
+anova_table$`Pr(>F)` <- format.pval(anova_table$`Pr(>F)`)
+
+if (p < .05){
+  significance = "significant"
+} else{
+  significance = "nonsignificant"
+}
 
 if (p < .001) {
   p_reported = "p < .001"
@@ -73,8 +81,8 @@ mcp_table$sig <- add_stars(mcp_table$p)
 
 ```
 
-Group comparisons were completed with a one-way analysis of variance.
-
+A one-way analysis of variance on **`r y`** by **`r x`** found
+a `r significance` difference between groups,
 F(`r dfn`, `r dfd` ) = `r round(F, 2)`, `r p_reported`.
 
 </br>
@@ -96,10 +104,41 @@ formattable(sum_stats,
 ### ANOVA Table
 
 ```{r, anova table}
+
 formattable(anova_table)
 
 ```
 
+</br>
+
+### Test Assumptions
+
+
+#### Normality
+
+Normality can be assessed via a quantile-quantile plot. Normally distributed residuals will fall close to the line. ANOVA is robust to violations of normality when sample sizes are approximately equal.
+
+```{r, normality}
+library(ggpubr)
+ggqqplot(xxxDATA$xxxDV)
+
+```
+
+#### Homogeneity of Variances
+
+```{r, levene}
+library(car)
+homogen <- leveneTest(xxxDATA$xxxDV, xxxDATA$xxxIV)
+dfn <- homogen[1,1]
+dfd <- homogen[2,1]
+F <- round( homogen[1,2], 3)
+p <- format.pval(homogen[1,3])
+
+```
+Equal variances can be assessed with a Levine Test,
+F(`r dfn`, `r dfd`) = `r F`, p < `r p`.
+A significant result suggests rejecting homogeneity of variances.
+ANOVA is robust to violations of this assumption when group sizes are approximately equal.
 
 </br>
 

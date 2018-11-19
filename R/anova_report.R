@@ -11,6 +11,8 @@
 #' @import ggridges
 #' @import formattable
 #' @import knitr
+#' @import ggpubr
+#' @import car
 #' @export
 #' @examples
 #' data(mpg, package="ggplot2")
