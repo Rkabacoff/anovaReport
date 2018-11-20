@@ -159,13 +159,6 @@ formattable(mcp_table,
 
 ```
 
-</br>
-
-
-### Graphs
-
-  </br>
-
 #### Box Plots
 
 Boxes capture the middle 50 percent of scores. Horizontal lines within the boxes are medians. The wiskers capture roughly 99% of scores and the points display outliers.
@@ -174,30 +167,13 @@ Boxes capture the middle 50 percent of scores. Horizontal lines within the boxes
 
 
 ```{r boxplots}
+xxxDATA$xxxIV <- reorder(xxxDATA$xxxIV, xxxDATA$xxxDV,
+                          mean, na.rm = TRUE)
 ggplot(xxxDATA,
        aes(y = xxxDV,
            x = xxxIV,
            fill = xxxIV)) +
   geom_boxplot() +
   theme_minimal() +
-  theme(legend.position = "none")
-```
-
-</br>
-
-#### Ridge Plots
-
-Ridge plots use kernel density estimation to display the distribution of scores in each group.
-
-</br>
-
-
-```{r ridge plots}
-ggplot(xxxDATA,
-       aes(x = xxxDV,
-           y = xxxIV,
-           fill = xxxIV)) +
-  geom_density_ridges() +
-  theme_ridges() +
   theme(legend.position = "none")
 ```

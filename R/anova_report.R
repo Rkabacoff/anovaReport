@@ -8,7 +8,6 @@
 #' @param y dependent variable
 #' @param browse If \code{TRUE}, use external browser
 #' @import ggplot2
-#' @import ggridges
 #' @import formattable
 #' @import knitr
 #' @import ggpubr
